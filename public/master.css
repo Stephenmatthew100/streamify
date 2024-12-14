@@ -1,0 +1,20 @@
+:root {
+    --primary-green: #3b9a57;   /* Main Green for buttons and highlights */
+    --hover-green: #2c6f3f;     /* Darker Green for hover states */
+    --dark-bg: #181818;         /* Background color for dark theme */
+    --container-bg: #2a2a2a;    /* Background for containers */
+    --input-bg: #333;           /* Background for input fields */
+    --border-color: #444;       /* Border color for form fields and inputs */
+    --text-color: #ddd;         /* Main text color */
+    --input-focus-border: #3b9a57;  /* Green border on input focus */
+    --input-placeholder: #bbb;  /* Placeholder text color */
+    --disabled-color: #666;     /* Disabled button color */
+    --light-text: #aaa;         /* Lighter text color for icons or placeholders */
+}
+
+body {
+    margin: 0;
+    font-family: 'Trebuchet MS', sans-serif;
+    background-color: var(--dark-bg);
+    color: var(--text-color);
+}

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Video - Stream Mini</title>
+    <link rel="stylesheet" href="../master.css">
+
+   <style>
+    /* Progress Bar Style */
+    #progress-bar-container {
+        width: 80%;
+        background-color: #f3f3f3;
+        border-radius: 5px;
+        height: 5px;
+        margin-top: 20px;
+    }
+
+    #progress-bar {
+        height: 100%;
+        background-color: var(--hover-green);
+        width: 0%;
+        border-radius: 5px;
+    }
+
+    /* Rest of the Styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background-color: var(--dark-bg);
+        color: var(--text-color);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    h1 {
+        color: var(--primary-green);
+    }
+
+    .upload-container {
+        display: flex;
+        justify-content: space-between;
+        width: 80%;
+        max-width: 1000px;
+        background-color: var(--container-bg); 
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+        padding: 2rem;
+        border-radius: 8px;
+        margin: 15px;
+        border: 2px solid var(--primary-green);
+    }
+
+    .upload-boxes {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 48%;
+    }
+
+    .upload-boxes input[type="file"] {
+        margin-bottom: 1rem;
+        padding: 0.5rem;
+        background-color: var(--input-bg); 
+        border: 2px solid var(--primary-green); 
+        border-radius: 4px;
+        color: var(--text-color);
+        width: 100%;
+        cursor: pointer;
+    }
+
+    .form-section {
+        width: 48%;
+    }
+
+    .form-section input, .form-section textarea {
+        width: 100%;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        border: 2px solid var(--border-color);
+        font-size: 1rem;
+        background-color: var(--input-bg);
+        color: var(--text-color);
+        transition: border-color 0.3s ease;
+    }
+
+    .form-section input:focus, .form-section textarea:focus {
+        border-color: var(--input-focus-border); 
+        outline: none;
+    }
+
+    .form-section textarea {
+        resize: vertical;
+        min-height: 150px;
+    }
+
+    .upload-btn {
+        background-color: var(--primary-green); 
+        color: white;
+        font-size: 1.2rem;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        transition: background-color 0.3s ease;
+    }
+
+    .upload-btn:hover {
+        background-color: var(--hover-green); 
+    }
+
+    .upload-btn:disabled {
+        background-color: var(--disabled-color);
+        cursor: not-allowed;
+    }
+
+   </style>
+</head>
+<body>
+    <h1>Upload A Video</h1>
+    <div id="progress-bar-container">
+        <div id="progress-bar"></div>
+    </div>
+    <form id="upload-form" class="upload-container" method="POST" action="/upload/video">
+        
+        <div class="upload-boxes">
+            <div class="video-box">
+                <label for="video-upload" class="upload-box">
+                    <input type="file" id="video-upload" name="video" accept="video/*" required />
+                    <span>Upload Video</span>
+                </label>
+            </div>
+
+            <div class="thumbnail-box">
+                <label for="thumbnail-upload">
+                    <input type="file" id="thumbnail-upload" name="thumbnail" accept="image/*" />
+                    <span>Upload Thumbnail (optional)</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Right Section for Form Fields -->
+        <div class="form-section">
+            <input type="text" id="title" name="title" placeholder="Enter Video Title" required />
+            <input type="text" id="tags" name="tags" placeholder="Enter Tags (comma separated)" />
+            <input type="url" id="url" name="url" placeholder="Enter Video URL" />
+            <textarea id="description" name="description" placeholder="Enter Description" required></textarea>
+
+            <button type="submit" id="upload-btn" class="upload-btn">Upload Video</button>
+        </div>
+    </form>
+
+    <script>
+        const form = document.getElementById('upload-form');
+        const progressBar = document.getElementById('progress-bar');
+        const uploadButton = document.getElementById('upload-btn');
+
+        form.addEventListener('submit', handleSubmit);
+
+        async function handleSubmit(event) {
+            event.preventDefault();
+
+            const formData = new FormData(form);
+            const xhr = new XMLHttpRequest(); 
+
+            xhr.open('POST', form.action, true);
+
+            xhr.upload.onprogress = function(event) {
+                if (event.lengthComputable) {
+                    const percentComplete = (event.loaded / event.total) * 100;
+                    progressBar.style.width = percentComplete + '%';
+                }
+            };
+
+            // Handle the request completion
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    alert('Video uploaded successfully!');
+                    form.reset(); // Reset the form after successful upload
+                    progressBar.style.width = '0%'; // Reset the progress bar
+                } else {
+                    alert('Failed to upload video. Please try again.');
+                    uploadButton.disabled = false;progressBar.style.display='none'
+                }
+            };
+
+            xhr.onerror = function() {
+                alert('An error occurred while uploading. Please try again.');
+            };
+
+            // Disable the submit button to prevent multiple submissions
+            uploadButton.disabled = true;
+
+            // Send the form data (including file data)
+            xhr.send(formData);
+        }
+    </script>
+</body>
+</html>

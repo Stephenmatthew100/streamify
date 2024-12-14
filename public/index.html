@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streamify</title>
+    <link rel="stylesheet" href="master.css">
+    <style>
+        h1 {
+            font-size: 1.5rem;
+            margin: 0;
+            color: var(--primary-green);
+        }
+
+        nav {
+            background-color: var(--container-bg);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .form-wrapper {
+            display: flex;
+            align-items: center;
+        }
+
+        .form {
+            position: relative;
+            display: flex;
+            align-items: center;
+            border-radius: 9999px;
+            border: 2px solid var(--border-color);
+            padding: 0.5rem;
+            width: 110px;
+            transition: width 0.3s ease, border-color 0.3s ease;
+        }
+
+        .form:focus-within {
+            border-color: var(--input-focus-border);
+            width: 350px;
+        }
+
+        .input {
+            flex-grow: 1;
+            padding: 4px 4px 4px 2rem;
+            font-size: 1rem;
+            background-color: transparent;
+            color: var(--text-color);
+            border: none;
+            border-radius: 9999px;
+            outline: none;
+            width: 0;
+            transition: width 0.3s ease;
+        }
+
+        .form:focus-within .input {
+            width: 100%;
+        }
+
+        .input::placeholder {
+            color: var(--input-placeholder);
+        }
+
+        .form button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .search-btn {
+            left: 1rem;
+        }
+
+        .reset-btn {
+            right: 1rem;
+            display: none;
+        }
+
+        .input:not(:placeholder-shown) + .reset-btn {
+            display: block;
+        }
+
+        .upload-btn {
+            background-color: var(--primary-green);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .upload-btn:hover {
+            background-color: var(--hover-green);
+        }
+
+        .contents {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .vidbox {
+            background-color: rgba(255, 235, 235, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .vidbox:hover {
+            transform: translateY(-5px);
+        }
+
+        .vidbox:hover p {
+            overflow: visible;
+        }
+        
+        .vidbox img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .vidbox a {
+            display: inline;
+            text-decoration: none;
+            align-self: flex-end;
+        }
+
+        .vidinfo {
+            padding: 10px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;  /* Stack the title and content vertically */
+        }
+
+        .vidinfo h2 {
+            font-size: 1rem;
+            margin: 8px 0;
+            color: var(--text-color);
+        }
+        .vidinfo p {
+            flex: 1;
+            height: 36px;
+            overflow: hidden;
+            color: var(--text-color);
+            margin: 2px;
+        }
+
+        .vidinfo button {
+            background-color: var(--primary-green);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .vidinfo button:hover {
+            background-color: var(--hover-green);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between; /* Pushes the description and button to opposite sides */
+            align-items: center;
+            gap: 10px;  /* Adds space between description and button */
+        }
+
+        .download {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .download svg {
+            width: 24px;
+            height: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <h1>Streamify</h1>
+
+        <a href="/upload"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg></a>
+         
+        <div class="form-wrapper">
+            <form class="form">
+                <button type="button" class="search-btn">
+                    <svg width="17" height="16" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="search">
+                        <path d="M7.667 12.667A5.333 5.333 0 107.667 2a5.333 5.333 0 000 10.667zM14.334 14l-2.9-2.9" stroke="white" stroke-width="1.333" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </button>
+
+                <input class="input" placeholder="Search..." type="text" required />
+                <button type="reset" class="reset-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </nav>
+
+    <main>
+        <div class="contents"></div>
+    </main>
+    
+    <script>
+        const contents = document.querySelector('.contents');
+        
+        async function loadVideos() {
+            try {
+                const response = await fetch('/load_vid');
+                if (!response.ok) throw new Error('Failed to fetch videos.');
+                
+                const videos = await response.json();
+                console.log(videos);
+                
+                videos.forEach((vid) => {
+                    const videoElement = `
+                    <div class="vidbox">
+                        <a href="/stream/${vid.file_path}">
+                            <img src="/videos/thumbnails/${vid.thumbnail}" alt="${vid.title}">
+                        </a>
+                        <div class="vidinfo">
+                            <h2>${vid.title}</h2>
+                            <div class="info-row">
+                                <p>${vid.description}</p>
+                                <a href="/videos/${vid.file_path}" download class="download">
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                            <polyline points="7 10 12 15 17 10"></polyline>
+                                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                                        </svg>
+                                    </span>
+                                </a>
+                            </div>                                
+                        </div>
+                    </div>
+                    
+                    `;
+                    contents.innerHTML += videoElement;
+                });
+            } catch (error) {
+                console.error('Error loading videos:', error);
+            }
+        }
+        loadVideos();
+    </script>
+</body>
+
+</html>
